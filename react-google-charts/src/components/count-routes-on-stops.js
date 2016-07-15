@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Chart } from 'react-google-charts'
+import ChartSelector from './chart-selector.js'
 
 export default class CountRoutesOnStops extends Component {
 	constructor(props) {
@@ -26,19 +27,23 @@ export default class CountRoutesOnStops extends Component {
 			.then(res => this.setState({ "rows": res }))
 	}
 
+
 	render() {
 		return (
 			<div>
-				<p>meow</p>
+				<ChartSelector handler={ this.props.handleChange.bind(this, "chartType") }
+											 defaultChart={"Histogram"} />
+
 				<Chart chartType={ `${this.state.chartType}` }
 							 options={{ title: "Routes Serving Stops"
-												, height: 600
-												, width: 800
-												, histogram: { bucketSize: 1 } }}
-							 width="100%"
-							 height="500px"
+												, histogram: { bucketSize: 1
+																		 , hAxis: {title: "# Of Stops"}
+																		 , vAxis: {title: "Frequency"} }}}
+							 height="600px"
+							 width="800px"
 							 rows={ this.state.rows }
 						   columns={ this.state.columns } />
+			
 			</div>
 		)
 	}

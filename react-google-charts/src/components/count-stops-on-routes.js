@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Chart } from 'react-google-charts'
+import ChartSelector from './chart-selector.js'
 
 export default class CountStopsOnRoutes extends Component {
 	constructor(props) {
@@ -18,16 +19,6 @@ export default class CountStopsOnRoutes extends Component {
 		)
 	}
 
-	handleChange(origin, event) {
-		switch(origin) {
-			case "count":
-				this.setState({ "count": event.target.value })
-				break;
-			case "chartType":
-				this.setState({ chartType: event.target.value })
-		}
-	}
-
 	componentDidMount() {
 		fetch(`http://localhost:5000/count_stops_on_routes?${this.state.query}`)
 			.then(res => res.json())
@@ -38,6 +29,9 @@ export default class CountStopsOnRoutes extends Component {
 	render() {
 		return (
 			<div>
+				<ChartSelector handler={ this.props.handleChange.bind(this, "chartType") }
+											 defaultChart={"Histogram"} />
+
 				<Chart chartType={ `${this.state.chartType}` }
 							 columns={ this.state.columns }
 							 rows={ this.state.rows }
@@ -45,12 +39,6 @@ export default class CountStopsOnRoutes extends Component {
 							 width="100%"
 							 height="500px" />
 
-				<select onChange={ this.handleChange.bind(this, "chartType")} >
-					<option value="Histogram">Histogram</option>
-					<option value="ColumnChart">ColumnChart</option>
-					<option value="LineChart">LineChart</option>
-					<option value="AreaChart">AreaChart</option>
-				</select>
 			</div>
 		)
 	}
