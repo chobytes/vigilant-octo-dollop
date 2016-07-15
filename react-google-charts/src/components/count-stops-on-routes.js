@@ -12,13 +12,9 @@ export default class CountStopsOnRoutes extends Component {
 								 , "rows": [] }
 	}
 
-	toColumns(data) {
+	processData(data) {
 		return (
-			data.map(cell => {
-				return (
-					[cell.name, cell.count]
-				)
-			})
+			data.map(a => [a.name, a.count])
 		)
 	}
 
@@ -33,9 +29,9 @@ export default class CountStopsOnRoutes extends Component {
 	}
 
 	componentDidMount() {
-		fetch(`${this.props.source}/count_stops_on_routes?${this.state.query}`)
+		fetch(`http://localhost:5000/count_stops_on_routes?${this.state.query}`)
 			.then(res => res.json())
-			.then(res => this.toColumns(res))
+			.then(res => this.processData(res))
 			.then(res => this.setState({ "rows": res }))
 	}
 
@@ -48,10 +44,6 @@ export default class CountStopsOnRoutes extends Component {
 							 options={{title: "Count Stops On Route"}}
 							 width="100%"
 							 height="500px" />
-
-				{/* <input type="number"
-				value={ this.state.count }
-				onChange={ this.handleChange.bind(this, "count") } /> */}
 
 				<select onChange={ this.handleChange.bind(this, "chartType")} >
 					<option value="Histogram">Histogram</option>

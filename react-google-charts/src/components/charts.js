@@ -1,15 +1,9 @@
 import React, { Component } from 'react'
 import { Chart } from 'react-google-charts'
+import { Link } from 'react-router'
 
-import CountStopsOnRoutes from './count-stops-on-routes.js'
-import CountRoutesOnStops from './count-routes-on-stops.js'
 
 export default class Charts extends Component {
-	constructor(props) {
-    super(props)
-    this.state = { "source": "http://127.0.0.1:5000" } 
-
-  }
 
 
 	componentDidMount() {	
@@ -45,9 +39,13 @@ export default class Charts extends Component {
   render() {
     return (
       <div>
-				<h1>Foo</h1>
-				<CountStopsOnRoutes source={this.state.source}/>
-				<CountRoutesOnStops source={ this.state.source} />
+				<nav className="navbar navbar-default">
+					<ul className="nav navbar-nav navbar-left">
+						<li> <Link to="count_stops_on_routes">count stops on routes</Link> </li>
+						<li> <Link to="count_routes_on_stops">count routes on stops</Link> </li>
+					</ul>
+				</nav>
+				{this.props.children}
       </div>
     )
   }
