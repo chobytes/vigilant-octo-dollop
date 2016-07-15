@@ -51,7 +51,7 @@ export default class CountRoutesOnStops extends Component {
 	render() {
 		return (
 			<div>
-				<ChartSelector handler={ this.props.handleChange.bind(this, "chartType") }
+				<ChartSelector handler={ this.handleChange.bind(this, "chartType") }
 											 defaultChart={"Histogram"} />
 
 				

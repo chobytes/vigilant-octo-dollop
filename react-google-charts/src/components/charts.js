@@ -13,62 +13,25 @@ export default class Charts extends Component {
 		super(props)
 
 		this.state = { source: "http://127.0.0.1:5000"
-								 , chartTypes: [
-				  					 "BarChart"
-									 , "LineChart"
-									 , "BubbleChart"
-									 , "Histogram"
-									 , "ScatterChart"
-									 , "AreaChart"
-									 , "CandlestickChart"
-									 , "ColumnChart"
-									 , "ComboChart"
-									 , "DonutChart"
-									 , "SteppedAreaChart"
-									 , "Table"
-									 , "Timeline"
-									 , "TreeMap"
-									 , "TrendLines"
-									 , "Waterall"
-									 , "Gantt"
-									 , "WordTree" ]
 								 , standardQueries: [] }
-	}
-
-	handleChange(origin, event) {
-		switch(origin) {
-			case "count":
-				this.setState({ "count": event.target.value })
-				break;
-			case "chartType":
-				this.setState({ chartType: event.target.value })
-			case "queryOrder":
-				this.setState({ queryOrder: event.target.value })
-				break;	
-		}
 	}
 
   render() {
     return (
       <div>
-				<CountStopsOnRoutes source={ this.state.source }
-														handleChange={ this.handleChange }
-														chartTypes={ this.state.chartTypes } />
+				<CountStopsOnRoutes source={ this.state.source } />
 
 				<hr/ >
 
-				<CountRoutesOnStops source={ this.state.source }
-														handleChange={ this.handleChange } />
+				<CountRoutesOnStops source={ this.state.source } />
 
 				<hr />
 
-				<RidershipPerRoute source={ this.state.source }
-														handleChange={ this.handleChange } />
+				<RidershipPerRoute source={ this.state.source } />
 
 				<hr />
 
-				<RidershipPerStop source={ this.state.source }
-														handleChange={ this.handleChange } />
+				<RidershipPerStop source={ this.state.source } />
       </div>
     )
   }
