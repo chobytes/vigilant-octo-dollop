@@ -75,6 +75,93 @@ from
     inner join streets as cs on stp.cross_id = cs.id
 group by
       rs.stop_id,
-      os.name, cs.name;
+      os.name,
+			cs.name;
+
+
+-- stops where there are more boardings than departures
+create view  stops_with_higher_boardings as
+select os.name as on_street_name,
+			 cs as cross_street_name,
+			 rdr.boardings,
+			 rdr.departures
+from
+		ridership as rdr
+		inner join stops as stp on rdr.stop_id = stp.id
+		inner join streets as os on stp.on_id = os.id
+		inner join streets as cs on stp.cross_id = cs.id
+		where rdr.boardings > rdr.departures
+;
+
+-- stops where there are more departures than boardings
+create view  stops_with_higher_boardings as
+select os.name as on_street_name,
+			 cs as cross_street_name,
+			 rdr.boardings,
+			 rdr.departures
+from
+		ridership as rdr
+		inner join stops as stp on rdr.stop_id = stp.id
+		inner join streets as os on stp.on_id = os.id
+		inner join streets as cs on stp.cross_id = cs.id
+		where rdr.boardings < rdr.departures
+;
+
+-- boardings per route
+create view ridership_per_route as
+select
+		rt.name,
+		sum(rdr.boardings) as boardings,
+		sum(rdr.departures) as departures
+from
+		ridership as rdr
+		inner join routes_stops as rs on rdr.stop_id = rs.stop_id
+		inner join routes as rt on rs.route_id = rt.id
+group by rt.name
+;
+
+
+-- ridership per stop
+create view ridership_per_stop as
+select
+		os.name as on_street_name,
+		cs.name as cross_street_name,
+		rdr.boardings,
+		rdr.departures
+from
+		ridership as rdr
+		inner join stops as stp on rdr.stop_id = stp.id
+		inner join streets as os on stp.on_id = os.id
+		inner join streets as cs on stp.cross_id = cs.id
+;
+		
+
+-- ridership per stop
+create view boardings_per_stop as
+select
+		os.name as on_street_name,
+		cs.name as cross_street_name,
+		rdr.boardings
+from
+		ridership as rdr
+		inner join stops as stp on rdr.stop_id = stp.id
+		inner join streets as os on stp.on_id = os.id
+		inner join streets as cs on stp.cross_id = cs.id
+;
+
+-- departures per stop 
+create view departures_per_stop as
+select os.name as on_street_name,
+			 cs.name as cross_street_name,
+			 rdr.departures
+from
+		ridership as rdr
+		inner join stops as stp on rdr.stop_id = stp.id
+		inner join streets as os on stp.on_id = os.id
+		inner join streets as cs on stp.cross_id = cs.id
+;	
+
+
+
 
 

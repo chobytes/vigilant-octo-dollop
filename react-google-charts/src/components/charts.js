@@ -4,6 +4,8 @@ import { Link } from 'react-router'
 
 import CountStopsOnRoutes from './count-stops-on-routes.js'
 import CountRoutesOnStops from './count-routes-on-stops.js'
+import RidershipPerRoute from './ridership-per-route.js'
+import RidershipPerStop from './ridership-per-stop.js'
 
 
 export default class Charts extends Component {
@@ -40,38 +42,11 @@ export default class Charts extends Component {
 				break;
 			case "chartType":
 				this.setState({ chartType: event.target.value })
+			case "queryOrder":
+				this.setState({ queryOrder: event.target.value })
+				break;	
 		}
 	}
-
-	componentDidMount() {	
-    var options = {
-      title: 'Age vs. Weight comparison',
-      hAxis: {title: 'Age', minValue: 0, maxValue: 15},
-      vAxis: {title: 'Weight', minValue: 0, maxValue: 15},
-      legend: 'none'
-    };
-
-    var rows = [
-      [ 8,      12],
-      [ 4,      5.5],
-      [ 11,     14],
-      [ 4,      5],
-      [ 3,      3.5],
-      [ 6.5,    7]
-    ];
-
-    var columns = [
-      {
-        'type': 'number',
-        'label' : 'Age'
-      }, 
-      {
-        'type' : 'number',
-        'label' : 'Weight'
-      }
-    ];
-
-}
 
   render() {
     return (
@@ -83,8 +58,17 @@ export default class Charts extends Component {
 				<hr/ >
 
 				<CountRoutesOnStops source={ this.state.source }
-														handleChange={ this.handleChange }
-														chartTypes={ this.state.chartTypes } />
+														handleChange={ this.handleChange } />
+
+				<hr />
+
+				<RidershipPerRoute source={ this.state.source }
+														handleChange={ this.handleChange } />
+
+				<hr />
+
+				<RidershipPerStop source={ this.state.source }
+														handleChange={ this.handleChange } />
       </div>
     )
   }

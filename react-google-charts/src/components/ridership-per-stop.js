@@ -2,17 +2,18 @@ import React, { Component } from 'react'
 import { Chart } from 'react-google-charts'
 import ChartSelector from './chart-selector.js'
 
-export default class CountStopsOnRoutes extends Component {
+export default class RidershipPerStop extends Component {
 	constructor(props) {
 		super(props)
 
 		this.state = { sortOrder: "desc"
-								 , orderBy: "count"
-								 , "chartType": "Histogram"
-								 , "columns": [ { "label": "Route Name", "type": "string" }
-															, { "label": "Count", "type": "number" } ]
-								 , "rows": [] }
-	}
+								 , orderBy: "boardings"
+								 , chartType: "Histogram"
+								 , columns: [ { label: "Stop", type: "string" }
+														, { label: "Boardings", type: "number" }
+														, { label: "Departures", type: "number" } ]
+								 , rows: [] }
+		}
 
 	handleChange(origin, event) {
 		switch(origin) {
@@ -27,14 +28,14 @@ export default class CountStopsOnRoutes extends Component {
 
 	processData(data) {
 		return (
-			data.map(a => [a.name, a.count])
+			data.map(a => [ `${a.on_street_name} ${a.cross_street_name}`
+										, a.boardings
+										, a.departures ])
 		)
 	}
 
-
-
 	componentDidMount() {
-		fetch(`${this.props.source}/count_stops_on_routes?order=${ this.state.orderBy }.${ this.state.sortOrder }`)
+		fetch(`${this.props.source}/ridership_per_stop?order=${ this.state.orderBy }.${ this.state.sortOrder }`)
 			.then(res => res.json())
 			.then(res => this.processData(res))
 			.then(res => this.setState({ "rows": res }))
@@ -42,7 +43,7 @@ export default class CountStopsOnRoutes extends Component {
 
 	componentWillUpdate(nextProps, nextState) {
 		if(this.state.rows != nextState.rows) return;
-		fetch(`${nextProps.source}/count_stops_on_routes?order=${ nextState.orderBy }.${ nextState.sortOrder }`)
+		fetch(`${nextProps.source}/ridership_per_stop?order=${ nextState.orderBy }.${ nextState.sortOrder }`)
 			.then(res => res.json())
 			.then(res => this.processData(res))
 			.then(res => this.setState({ "rows": res }))
@@ -60,15 +61,17 @@ export default class CountStopsOnRoutes extends Component {
 					<option value="desc">Descending</option>
 					<option value="asc">Ascending</option>
 				</select>
-
+				
+				
 				<Chart chartType={ `${this.state.chartType}` }
-							 columns={ this.state.columns }
-							 rows={ this.state.rows }
-							 options={{title: "Stops On Routes"}}
+							 options={{ title: "Ridership Per Stop" }}
+							 height="600px"
 							 width="100%"
-							 height="600px" />
-
+							 rows={ this.state.rows }
+						   columns={ this.state.columns } />
+				
 			</div>
 		)
 	}
+
 }

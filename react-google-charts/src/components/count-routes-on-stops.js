@@ -6,11 +6,23 @@ export default class CountRoutesOnStops extends Component {
 	constructor(props) {
 		super(props)
 
-		this.state = { query: ""
+		this.state = { sortOrder: "desc"
+								 , orderBy: "number_of_routes"
 								 , chartType: "Histogram"
 								 , columns: [ { label: "Stop at", type: "string" }
 														, { label: "Number of routes serving", type: "number" } ]
 								 , rows: [] }
+	}
+
+	handleChange(origin, event) {
+		switch(origin) {
+			case "chartType":
+				this.setState({ chartType: event.target.value })
+				break;
+			case "sortOrder":
+				this.setState({ sortOrder: event.target.value })
+				break;	
+		}
 	}
 
 	processData(data) {
@@ -21,18 +33,33 @@ export default class CountRoutesOnStops extends Component {
 	}
 
 	componentDidMount() {
-		fetch(`http://127.0.0.1:5000/count_routes_serving_stops?${this.state.query}`)
+		fetch(`${this.props.source}/count_routes_serving_stops?order=${ this.state.orderBy }.${ this.state.sortOrder }.limit=1000`)
 			.then(res => res.json())
 			.then(res => this.processData(res))
 			.then(res => this.setState({ "rows": res }))
 	}
 
-
+	componentWillUpdate(nextProps, nextState) {
+		if(this.state.rows != nextState.rows) return;
+		fetch(`${nextProps.source}/count_routes_serving_stops?order=${ nextState.orderBy }.${ nextState.sortOrder }`)
+			.then(res => res.json())
+			.then(res => this.processData(res))
+			.then(res => this.setState({ "rows": res }))
+		
+	}
+	
 	render() {
 		return (
 			<div>
 				<ChartSelector handler={ this.props.handleChange.bind(this, "chartType") }
 											 defaultChart={"Histogram"} />
+
+				
+				<select value={ this.state.sortOrder }
+								onChange={ this.handleChange.bind(this, "sortOrder") } >
+					<option value="desc">Descending</option>
+					<option value="asc">Ascending</option>
+				</select>
 
 				<Chart chartType={ `${this.state.chartType}` }
 							 options={{ title: "Routes Serving Stops"
@@ -40,7 +67,7 @@ export default class CountRoutesOnStops extends Component {
 																		 , hAxis: {title: "# Of Stops"}
 																		 , vAxis: {title: "Frequency"} }}}
 							 height="600px"
-							 width="800px"
+							 width="100%"
 							 rows={ this.state.rows }
 						   columns={ this.state.columns } />
 			
