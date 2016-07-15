@@ -2,9 +2,46 @@ import React, { Component } from 'react'
 import { Chart } from 'react-google-charts'
 import { Link } from 'react-router'
 
+import CountStopsOnRoutes from './count-stops-on-routes.js'
+import CountRoutesOnStops from './count-routes-on-stops.js'
+
 
 export default class Charts extends Component {
+	constructor(props) {
+		super(props)
 
+		this.state = { source: "http://127.0.0.1:5000"
+								 , chartTypes: [
+				  					 "BarChart"
+									 , "LineChart"
+									 , "BubbleChart"
+									 , "Histogram"
+									 , "ScatterChart"
+									 , "AreaChart"
+									 , "CandlestickChart"
+									 , "ColumnChart"
+									 , "ComboChart"
+									 , "DonutChart"
+									 , "SteppedAreaChart"
+									 , "Table"
+									 , "Timeline"
+									 , "TreeMap"
+									 , "TrendLines"
+									 , "Waterall"
+									 , "Gantt"
+									 , "WordTree" ]
+								 , standardQueries: [] }
+	}
+
+	handleChange(origin, event) {
+		switch(origin) {
+			case "count":
+				this.setState({ "count": event.target.value })
+				break;
+			case "chartType":
+				this.setState({ chartType: event.target.value })
+		}
+	}
 
 	componentDidMount() {	
     var options = {
@@ -39,13 +76,15 @@ export default class Charts extends Component {
   render() {
     return (
       <div>
-				<nav className="navbar navbar-default">
-					<ul className="nav navbar-nav navbar-left">
-						<li> <Link to="count_stops_on_routes">count stops on routes</Link> </li>
-						<li> <Link to="count_routes_on_stops">count routes on stops</Link> </li>
-					</ul>
-				</nav>
-				{this.props.children}
+				<CountStopsOnRoutes source={ this.state.source }
+														handleChange={ this.handleChange }
+														chartTypes={ this.state.chartTypes } />
+
+				<hr/ >
+
+				<CountRoutesOnStops source={ this.state.source }
+														handleChange={ this.handleChange }
+														chartTypes={ this.state.chartTypes } />
       </div>
     )
   }
